@@ -15,6 +15,9 @@ COPY ./CDR.DataRecipient.Repository.SQLite/. /app/CDR.DataRecipient.Repository.S
 COPY ./CDR.DataRecipient/. /app/CDR.DataRecipient
 COPY ./CDR.DataRecipient.SDK/. /app/CDR.DataRecipient.SDK
 
+COPY ./build/paypal_ca.crt /usr/local/share/ca-certificates/paypal_ca.crt
+RUN update-ca-certificates
+
 WORKDIR /app/CDR.DataRecipient.Web
 RUN dotnet publish -c Release -o /app/publish/web
 
@@ -31,6 +34,9 @@ RUN apt-get update && apt-get install -y supervisor
 RUN apt-get update && apt-get install -y sudo
 
 RUN sudo cp ./web/Certificates/ca.crt /usr/local/share/ca-certificates/ca.crt
+
+COPY ./build/paypal_ca.crt /usr/local/share/ca-certificates/paypal_ca.crt
+
 RUN sudo update-ca-certificates
 
 ENV ASPNETCORE_URLS=https://+:9001
